@@ -1,43 +1,46 @@
+let numberToDisplay = 0;
+let oldNumber = 0;
+let currentOperator = "";
+let content = document.getElementById("resultDisplay");
+const buttons = document.querySelectorAll(".number");
+const buttonsSymbols = document.querySelectorAll(".symbol");
+
+
 function add(firstNumber, secondNumber) {
-    console.log(firstNumber + secondNumber);
+    return(firstNumber + secondNumber);
 }
 
 function substract(firstNumber, secondNumber) {
-    console.log(firstNumber - secondNumber);
+    return(firstNumber - secondNumber);
 }
 
 function multiply(firstNumber, secondNumber) {
-    console.log(firstNumber * secondNumber);
+    return(firstNumber * secondNumber);
 }
 
 function divide(firstNumber, secondNumber) {
-    console.log(firstNumber / secondNumber);
+    return(Math.round((firstNumber / secondNumber) * 10) / 10);
 }
 
 function operate(firstNumber, secondNumber, operator) {
     if (operator == "+") {
-        add(firstNumber, secondNumber);
+        return add(firstNumber, secondNumber);
     }
     else if (operator == "-") {
-        substract(firstNumber, secondNumber);
+        return substract(firstNumber, secondNumber);
     }
     else if (operator == "*") {
-        multiply(firstNumber, secondNumber);
+        return multiply(firstNumber, secondNumber);
     }
     else if (operator == "/") {
-        divide(firstNumber, secondNumber);
-    }
-    else {
-        console.log("Operator not recognized");
+        if (firstNumber == 0 && secondNumber == 0) {
+            return "TRYAGAIN"
+        }
+        else {
+            return divide(firstNumber, secondNumber);
+        }
     }
 }
-
-let numberToDisplay = 0;
-
-let content = document.getElementById("resultDisplay");
-
-const buttons = document.querySelectorAll(".number");
-
 
 function displayNumber() {
     if (numberToDisplay > 999999999999) {
@@ -49,31 +52,61 @@ function displayNumber() {
     }
 }
 
-///numbersButton.onclick = function() {
-///    console.log(numbersButton.textContent);
-///}
 buttons.forEach(function(button) {
     button.addEventListener("click", function() {
-      // do something when the button is clicked
-      console.log(button.textContent);
+        if (numberToDisplay == 0) {
+            numberToDisplay = button.textContent;
+            displayNumber();
+            console.log(button.textContent);
+        }
+        else {
+            numberToDisplay = numberToDisplay + button.textContent;
+            displayNumber();
+            console.log(numberToDisplay);
+        }
     });
   });
 
-
-
-
-
-
-function changeNumbers(onClickNumber) {
-    if (numberToDisplay == 0) {
-        numberToDisplay = onClickNumber;
-    }
-    else {
-        return numberToDisplay + onClickNumber
-    }
-}
-
-
-
+buttonsSymbols.forEach(function(buttonSymbols) {
+    buttonSymbols.addEventListener("click", function() {
+        if (buttonSymbols.textContent == "c") {
+            numberToDisplay = 0;
+            displayNumber();
+        }
+        else if (buttonSymbols.textContent == "+"){
+            oldNumber = numberToDisplay;
+            currentOperator = "+";
+            numberToDisplay = 0;
+            displayNumber();
+        }
+        else if (buttonSymbols.textContent == "-") {
+            oldNumber = numberToDisplay;
+            currentOperator = "-";
+            numberToDisplay = 0;
+            displayNumber();
+        }
+        else if (buttonSymbols.textContent == "/") {
+            oldNumber = numberToDisplay;
+            currentOperator = "/";
+            numberToDisplay = 0;
+            displayNumber();
+        }
+        else if (buttonSymbols.textContent == "*") {
+            oldNumber = numberToDisplay;
+            currentOperator = "*";
+            numberToDisplay = 0;
+            displayNumber();
+        }
+        else if (buttonSymbols.textContent == "=") {
+            if (currentOperator == "") {
+                displayNumber();
+            }
+            else {
+                numberToDisplay = operate(Number(oldNumber), Number(numberToDisplay), currentOperator);
+            displayNumber();
+            }
+        }
+    })
+});
 
 displayNumber();
