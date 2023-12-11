@@ -34,7 +34,7 @@ function operate(firstNumber, secondNumber, operator) {
     }
     else if (operator == "/") {
         if (firstNumber == 0 && secondNumber == 0) {
-            return "TRYAGAIN"
+            return "TRYAGAIN :/"
         }
         else {
             return divide(firstNumber, secondNumber);
@@ -51,6 +51,13 @@ function displayNumber() {
         content.textContent=numberToDisplay;
     }
 }
+window.addEventListener('keydown', function(e) {
+    const key = document.querySelector(`button[data-key= "${e.keyCode}"]`);
+    if (!key) {
+        return;
+    }
+    document.getElementById(`${key.textContent}`).click();
+})
 
 buttons.forEach(function(button) {
     button.addEventListener("click", function() {
@@ -71,31 +78,21 @@ buttonsSymbols.forEach(function(buttonSymbols) {
     buttonSymbols.addEventListener("click", function() {
         if (buttonSymbols.textContent == "c") {
             numberToDisplay = 0;
+            oldNumber = 0;
+            currentOperator = "";
             displayNumber();
         }
-        else if (buttonSymbols.textContent == "+"){
-            oldNumber = numberToDisplay;
-            currentOperator = "+";
-            numberToDisplay = 0;
-            displayNumber();
+        else if (buttonSymbols.textContent == "+"){ 
+            checkForCurrentOperator(buttonSymbols.textContent)
         }
         else if (buttonSymbols.textContent == "-") {
-            oldNumber = numberToDisplay;
-            currentOperator = "-";
-            numberToDisplay = 0;
-            displayNumber();
+            checkForCurrentOperator(buttonSymbols.textContent)
         }
         else if (buttonSymbols.textContent == "/") {
-            oldNumber = numberToDisplay;
-            currentOperator = "/";
-            numberToDisplay = 0;
-            displayNumber();
+            checkForCurrentOperator(buttonSymbols.textContent)
         }
         else if (buttonSymbols.textContent == "*") {
-            oldNumber = numberToDisplay;
-            currentOperator = "*";
-            numberToDisplay = 0;
-            displayNumber();
+            checkForCurrentOperator(buttonSymbols.textContent)
         }
         else if (buttonSymbols.textContent == "=") {
             if (currentOperator == "") {
@@ -108,5 +105,21 @@ buttonsSymbols.forEach(function(buttonSymbols) {
         }
     })
 });
+
+function checkForCurrentOperator(e) {
+    if (currentOperator != "") {
+        numberToDisplay = operate(Number(oldNumber), Number(numberToDisplay), currentOperator);
+        currentOperator = e;
+        displayNumber();
+        oldNumber = numberToDisplay;
+        numberToDisplay = 0;
+    }
+    else {
+        oldNumber = numberToDisplay;
+        currentOperator = e;
+        numberToDisplay = 0;
+        displayNumber
+    }
+}
 
 displayNumber();
